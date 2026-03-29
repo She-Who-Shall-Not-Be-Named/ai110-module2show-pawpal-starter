@@ -26,6 +26,9 @@ Four classes, one responsibility each:
 - **`Owner`** — owns a list of Pets; aggregates tasks across all pets
 - **`Scheduler`** — all sorting, filtering, conflict detection, and schedule-building logic
 
+## Demo
+
+
 ## Smarter Scheduling
 
 PawPal+ goes beyond a basic to-do list with several algorithmic improvements built into `pawpal_system.py`:
