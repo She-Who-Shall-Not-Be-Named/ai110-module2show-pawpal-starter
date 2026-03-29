@@ -43,6 +43,31 @@ PawPal+ goes beyond a basic to-do list with several algorithmic improvements bui
 **Frequency-aware due-date logic**
 - `Activity.is_due_today()` respects each task's frequency: `once` tasks appear only on their exact date, `daily` tasks appear every day from their start date onward, and `weekly`/`monthly` tasks match by weekday or day-of-month.
 
+## Testing PawPal+
+
+Run the full test suite from the project root:
+
+```bash
+python -m pytest tests/test_pawpal.py -v
+```
+
+**What the tests cover (43 tests across 8 classes):**
+
+| Class | What it verifies |
+|---|---|
+| `TestActivity` | Priority/time getters, `mark_complete`, `is_due_today` |
+| `TestPet` | Task add/remove, pending filter, pet-task link |
+| `TestOwner` | Pet registration, deduplication, cross-pet task aggregation |
+| `TestScheduler` | Today's tasks, priority sort, completed exclusion |
+| `TestSorting` | Chronological order, priority descending, tie-breaking by time |
+| `TestRecurrence` | Daily → next day, weekly → next week, once → no recurrence, time-of-day preserved |
+| `TestConflictDetection` | Exact clashes, same-pet vs cross-pet, warning strings, no false positives |
+| `TestFiltering` | Filter by pet, by status, combined, no-arg returns all |
+| `TestEdgeCases` | Empty pet, duplicate guard, overlap warning without crash, owner dedup |
+
+**Confidence level: ★★★★☆**
+Core scheduling logic (sorting, filtering, recurrence, conflict detection) is fully covered. The remaining gap is integration-level tests for the Streamlit UI layer and duration-aware conflict detection, which is documented as a known tradeoff in `reflection.md`.
+
 ## Getting started
 
 ### Setup
