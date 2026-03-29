@@ -77,15 +77,15 @@ with st.sidebar:
                             time=scheduled,
                             frequency=t_freq,
                         )
-                        try:
-                            added = pet.add_task(new_act)
-                            if added:
-                                st.toast(f"Task added for {t_pet}!", icon="✅")
-                            else:
-                                st.toast("Duplicate — task already exists at that time.", icon="⚠️")
-                            st.rerun()
-                        except ValueError as e:
-                            st.error(f"Scheduling conflict: {e}")
+                        result = pet.add_task(new_act)
+                        if result == "duplicate":
+                            st.toast("Duplicate — task already exists at that time.", icon="⚠️")
+                        elif result:
+                            # result is a conflict warning string
+                            st.toast(f"Added with a note: {result}", icon="⚠️")
+                        else:
+                            st.toast(f"Task added for {t_pet}!", icon="✅")
+                        st.rerun()
                     else:
                         st.error("Task name is required.")
 
@@ -100,14 +100,21 @@ with st.sidebar:
         for nt in next_tasks:
             for orig in owner.get_all_tasks():
                 if orig.task == nt.task and orig.frequency == nt.frequency and orig.pet:
-                    try:
-                        orig.pet.add_task(nt)
-                        added_count += 1
-                    except ValueError:
-                        pass
+                    orig.pet.add_task(nt)
+                    added_count += 1
                     break
         st.toast(f"Added {added_count} task(s) for tomorrow!", icon="🔁")
         st.rerun()
+
+# ════════════════════════════════════════════════════════════════════════════
+# CONFLICT WARNINGS
+# ════════════════════════════════════════════════════════════════════════════
+conflict_warnings = scheduler.get_conflict_warnings(window_minutes=15)
+if conflict_warnings:
+    with st.expander(f"⚠️ {len(conflict_warnings)} scheduling conflict(s) detected — click to review", expanded=True):
+        for w in conflict_warnings:
+            st.warning(w)
+        st.caption("Two tasks are scheduled too close together for the same pet. Consider adjusting one of the times.")
 
 # ════════════════════════════════════════════════════════════════════════════
 # FILTERS
@@ -211,8 +218,10 @@ else:
                 task.completed = False
             else:
                 task.mark_complete()
+                if task.frequency in ("daily", "weekly"):
+                    next_date = task.get_time().strftime("%a %b %d")
+                    st.toast(f"Done! Next '{task.task}' scheduled for {next_date}.", icon="🔁")
             st.rerun()
-
 
 # ════════════════════════════════════════════════════════════════════════════
 # PER-PET SUMMARY

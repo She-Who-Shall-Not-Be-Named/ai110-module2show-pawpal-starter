@@ -1,26 +1,30 @@
-# PawPal+ (Module 2 Project)
+# PawPal+ 🐾
 
-You are building **PawPal+**, a Streamlit app that helps a pet owner plan care tasks for their pet.
+A smart pet care scheduling app built with Python and Streamlit. PawPal+ helps busy pet owners stay on top of daily routines by automatically sorting, filtering, and conflict-checking tasks across multiple pets.
 
-## Scenario
+## Features
 
-A busy pet owner needs help staying consistent with pet care. They want an assistant that can:
+| Feature | Description |
+|---|---|
+| **Smart urgency sorting** | Tasks are ranked by priority *and* how soon they're due — a high-priority task due in 15 minutes floats above one due in 6 hours |
+| **Flexible filtering** | Filter the schedule by pet, status (pending / completed / all), or any combination |
+| **Recurring task auto-scheduling** | Marking a daily or weekly task complete automatically creates the next occurrence — no manual re-entry |
+| **Conflict detection** | The scheduler scans every task pair and warns when two tasks for the same pet are scheduled too close together |
+| **Conflict warnings in the UI** | Conflicts appear as expandable `st.warning` banners with plain-English descriptions — no crashes, no technical errors |
+| **Frequency-aware due dates** | `once`, `daily`, `weekly`, and `monthly` tasks each apply their own logic for whether they appear today |
+| **Per-pet summary** | A quick-glance panel at the bottom shows each pet's pending tasks for the day |
+| **Overdue & upcoming alerts** | Separate banners surface tasks that have passed and tasks due within the next 2 hours |
 
-- Track pet care tasks (walks, feeding, meds, enrichment, grooming, etc.)
-- Consider constraints (time available, priority, owner preferences)
-- Produce a daily plan and explain why it chose that plan
+## System Architecture
 
-Your job is to design the system first (UML), then implement the logic in Python, then connect it to the Streamlit UI.
+The final class diagram is in [`uml_final.md`](uml_final.md) (Mermaid.js format — paste into [mermaid.live](https://mermaid.live) to view).
 
-## What you will build
+Four classes, one responsibility each:
 
-Your final app should:
-
-- Let a user enter basic owner + pet info
-- Let a user add/edit tasks (duration + priority at minimum)
-- Generate a daily schedule/plan based on constraints and priorities
-- Display the plan clearly (and ideally explain the reasoning)
-- Include tests for the most important scheduling behaviors
+- **`Activity`** — a single task with time, priority, frequency, and completion state
+- **`Pet`** — owns a list of Activities; enforces duplicate and conflict guards on add
+- **`Owner`** — owns a list of Pets; aggregates tasks across all pets
+- **`Scheduler`** — all sorting, filtering, conflict detection, and schedule-building logic
 
 ## Smarter Scheduling
 
