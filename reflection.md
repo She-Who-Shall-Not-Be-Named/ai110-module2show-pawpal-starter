@@ -17,8 +17,10 @@ Owner class:
 
     def set_pet()
     def get_pet()
+    def remove_pet()
     def set_task()
     def get_task()
+    def remove_task()
 Pet class:
     self.type - ct, dog, bird , ect?
     self.breed_type - breed of type
@@ -43,7 +45,9 @@ Activity class :
 
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
+yes, create_pet was converted to a @classmethod since constructing a Pet from an instance made no sense. Activity gained an optional pet: Pet field to capture which pet a task belongs to, closing the missing link between the two classes. time was changed from str to datetime so scheduling logic can actually compare and sort times without string-parsing bugs. On Owner, the pet_name: List[str] was removed since _pets already holds Pet objects with a .name attribute. Finally, num_pets_owned was replaced with a @property that returns len(self._pets) so the count always stays accurate automatically.
 
+Activity gets frequency and completed fields with full method implementations including mark_complete(). Pet takes ownership of its own task list, and Owner drops its flat _tasks list — instead aggregating tasks across all pets via get_all_tasks(). A new Scheduler class acts as the brain, taking an Owner and providing sort, filter, and daily-view logic so that scheduling behavior stays out of both the data classes and the UI.
 ---
 
 ## 2. Scheduling Logic and Tradeoffs
@@ -55,8 +59,14 @@ Activity class :
 
 **b. Tradeoffs**
 
-- Describe one tradeoff your scheduler makes.
-- Why is that tradeoff reasonable for this scenario?
+The scheduler compares task **start times only** — it has no concept of how long a task takes. Two tasks scheduled 20 minutes apart are treated as non-conflicting even if, say, a vet appointment lasts 90 minutes and overlaps everything scheduled after it.
+
+This is a reasonable tradeoff for a pet care app at this stage because:
+- Most household pet tasks (feeding, brushing, medication) are short and point-in-time by nature
+- Adding a `duration` field to every `Activity` would require owners to estimate times they rarely think about, adding friction to the UI
+- The `window_minutes` parameter in `get_conflicts()` partially compensates — setting a window of 60 or 90 minutes catches likely overlaps without needing true duration data
+
+The cost is that a long task like a vet visit won't automatically block the surrounding time slots. A future iteration could add an optional `duration_minutes` field to `Activity` that defaults to `0`, making duration-aware conflict detection opt-in rather than required.
 
 ---
 

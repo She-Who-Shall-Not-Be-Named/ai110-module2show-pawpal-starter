@@ -22,6 +22,27 @@ Your final app should:
 - Display the plan clearly (and ideally explain the reasoning)
 - Include tests for the most important scheduling behaviors
 
+## Smarter Scheduling
+
+PawPal+ goes beyond a basic to-do list with several algorithmic improvements built into `pawpal_system.py`:
+
+**Sorting**
+- Tasks can be sorted by time, priority, or an *urgency score* that combines priority with time proximity — a high-priority task due in 20 minutes ranks above one due in 6 hours.
+
+**Filtering**
+- `Scheduler.filter_tasks(pet_name, completed)` returns any slice of tasks by pet and/or completion status. Both parameters are optional and composable — e.g., Rex's pending tasks only.
+
+**Recurring task auto-scheduling**
+- Marking a `daily` or `weekly` task complete automatically creates the next occurrence on the same pet using `timedelta`, so the owner never has to re-enter routine tasks.
+
+**Conflict detection**
+- `Scheduler.get_conflicts(window_minutes, same_pet_only)` uses `itertools.combinations` to scan every task pair and surface scheduling overlaps.
+- By default only same-pet conflicts are flagged (walking Rex and feeding Mochi at the same time is fine).
+- `Scheduler.get_conflict_warnings()` returns the same results as plain-English strings — no exceptions raised, program never crashes.
+
+**Frequency-aware due-date logic**
+- `Activity.is_due_today()` respects each task's frequency: `once` tasks appear only on their exact date, `daily` tasks appear every day from their start date onward, and `weekly`/`monthly` tasks match by weekday or day-of-month.
+
 ## Getting started
 
 ### Setup
