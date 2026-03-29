@@ -1,11 +1,43 @@
 # PawPal+ Project Reflection
 
 ## 1. System Design
+Users should be able to do the following:
+    add a pet 
+    select/determine specific types of tasks owner wants the ap tp help with 
+    schedule tasks in a calander 
 
 **a. Initial design**
 
 - Briefly describe your initial UML design.
+- Initil design should include:
+Owner class:
+    self.name - name of owner
+    self.num_pets_owned - how many pets do they own? 
+    self.pet_name - names of pet(s) 
+
+    def set_pet()
+    def get_pet()
+    def set_task()
+    def get_task()
+Pet class:
+    self.type - ct, dog, bird , ect?
+    self.breed_type - breed of type
+    self.name - name of pet
+
+    def create_pet(self, type, breed, name)
+Activity class :
+    self.task - types of tasks owner wants to track
+    self.priority - priority if tasks within a day 
+    self.time - time for scheduling 
+
+    def set_priority()
+    def get_priority()
+    def set_time
+    def get_time()
+
 - What classes did you include, and what responsibilities did you assign to each?
+
+- 
 
 **b. Design changes**
 
